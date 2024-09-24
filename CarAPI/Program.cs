@@ -5,16 +5,17 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the container
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
         sqlOptions => sqlOptions.EnableRetryOnFailure(
             maxRetryCount: 5, // Number of retry attempts
             maxRetryDelay: TimeSpan.FromSeconds(10), // Delay between retries
-            errorNumbersToAdd: null // You can specify specific SQL error numbers
+            errorNumbersToAdd: null // Optionally, add specific SQL error numbers for retry
         )
     ));
-// Change the lifetimes of the services and repositories
+
+// Registering services and repositories with scoped lifetimes
 builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IInquiryRepository, InquiryRepository>();
 builder.Services.AddScoped<ICarService, CarService>();
@@ -22,6 +23,8 @@ builder.Services.AddScoped<IInquiryService, InquiryService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+// Swagger configuration, including XML comments for documentation
 builder.Services.AddSwaggerGen(c =>
 {
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -29,14 +32,18 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Configure the HTTP request pipeline
+if (app.Environment.IsDevelopment() || app.Environment.IsStaging() || app.Environment.IsProduction())
 {
+    // Enable Swagger and Swagger UI in all environments (Development, Staging, Production)
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Car API V1");
+        c.RoutePrefix = String.Empty; // Swagger will be served at the root URL
+    });
 }
 
 app.UseHttpsRedirection();
