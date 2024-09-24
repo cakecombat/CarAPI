@@ -11,6 +11,24 @@ namespace CarAPI.Controllers
     {
         private readonly ICarService _carService;
 
+        private const string AdminUsername = "admin";
+        private const string AdminPassword = "password123";
+
+        /// <summary>
+        /// Admin login with username and password.
+        /// </summary>
+        [HttpPost("login")]
+        public IActionResult AdminLogin([FromBody] AdminLoginModel loginModel)
+        {
+            if (loginModel.Username == AdminUsername && loginModel.Password == AdminPassword)
+            {
+                // Dummy success message
+                return Ok(new { Message = "Login successful", IsAuthenticated = true });
+            }
+
+            return Unauthorized(new { Message = "Invalid credentials" });
+        }
+
         public CarController(ICarService carService)
         {
             _carService = carService;
