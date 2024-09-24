@@ -64,7 +64,8 @@ namespace CarAPI.Controllers
         /// <param name="carDto">The car data to add.</param>
         /// <returns>The created car.</returns>
         [HttpPost]
-        public IActionResult AddCar([FromBody] CarCreateUpdateDto carDto)
+        [Consumes("multipart/form-data")] // Specify that this endpoint accepts multipart/form-data
+        public IActionResult AddCar([FromForm] CarCreateUpdateDto carDto)
         {
             var car = new Car
             {
@@ -74,6 +75,16 @@ namespace CarAPI.Controllers
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
+
+            // Handle image file upload
+            if (carDto.Picture != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    carDto.Picture.CopyTo(memoryStream);
+                    car.Picture = memoryStream.ToArray(); // Save the file as byte[]
+                }
+            }
 
             _carService.AddCar(car);
             return CreatedAtAction(nameof(GetCarById), new { id = car.Id }, car);
