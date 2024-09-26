@@ -5,7 +5,7 @@ namespace CarAPI.Models
 {
     public class CarRequestModel
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
 
         [Required]
         public int CarId { get; set; }
@@ -19,7 +19,7 @@ namespace CarAPI.Models
 
         public DateTime DateRequested { get; set; }
 
+
         public CarModel Car { get; set; }
     }
-
 }
