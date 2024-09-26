@@ -47,4 +47,9 @@ public class CarRepository : ICarRepository
             _context.SaveChanges(); 
         }
     }
+
+    public CarModel GetCarById(int id)
+    {
+        return _context.Cars.Find(id);
+    }
 }

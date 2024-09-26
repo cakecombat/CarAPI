@@ -44,7 +44,7 @@ namespace CarAPI.Controllers
         public IActionResult GetAllCars()
         {
             var cars = _carService.GetAllCars();
-            return Ok(cars); // Return full car details including timestamps and picture
+            return Ok(cars);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace CarAPI.Controllers
         {
             var car = _carService.GetCarById(id);
             if (car == null) return NotFound();
-            return Ok(car); // Return full car details
+            return Ok(car); 
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace CarAPI.Controllers
         /// <param name="carDto">The car data to add.</param>
         /// <returns>The created car.</returns>
         [HttpPost]
-        [Consumes("multipart/form-data")] // Specify that this endpoint accepts multipart/form-data
+        [Consumes("multipart/form-data")]
         public IActionResult AddCar([FromForm] CarCreateUpdateDto carDto)
         {
             var car = new CarModel
@@ -122,7 +122,7 @@ namespace CarAPI.Controllers
         /// Adds a new car request and sends an email to the requester.
         /// </summary>
         [HttpPost("car-requests")]
-        public async Task<IActionResult> AddCarRequest([FromBody] CarRequestModel request)
+        public async Task<IActionResult> AddCarRequest([FromBody] CreateCarRequestDto request)
         {
             await _carRequestService.AddCarRequest(request);
             return Ok(new { message = "Car request added and email sent." });

@@ -6,7 +6,7 @@ namespace CarAPI.Services
 {
     public interface ICarRequestService
     {
-        IEnumerable<CarRequestDto> GetAllCarRequests();
-        Task AddCarRequest(CarRequestModel carRequest);
+        IEnumerable<CarRequestDetailDto> GetAllCarRequests();
+        Task AddCarRequest(CreateCarRequestDto carRequest);
     }
 }

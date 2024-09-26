@@ -8,4 +8,5 @@ namespace CarAPI.Repositories
         IEnumerable<CarRequestModel> GetAllRequests();
         void AddRequest(CarRequestModel request);
     }
+
 }

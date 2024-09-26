@@ -8,7 +8,8 @@ namespace CarAPI.Repositories
         CarModel GetById(int id);
         void Add(CarModel car);
         void Update(int id, CarModel car); 
-        void Delete(int id); 
+        void Delete(int id);
+        CarModel GetCarById(int id);
     }
 
 
