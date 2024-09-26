@@ -1,4 +1,5 @@
-﻿using CarAPI.DTOs;
+﻿using CarAPI.DTO;
+using CarAPI.DTOs;
 using CarAPI.Models;
 using CarAPI.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -121,11 +122,21 @@ namespace CarAPI.Controllers
         /// <summary>
         /// Adds a new car request and sends an email to the requester.
         /// </summary>
-        [HttpPost("car-requests")]
-        public async Task<IActionResult> AddCarRequest([FromBody] CarRequestModel request)
+        [HttpPost]
+        public IActionResult AddCarRequest([FromBody] CreateCarRequestDto createCarRequestDto)
         {
-            await _carRequestService.AddCarRequest(request);
-            return Ok(new { message = "Car request added and email sent." });
+            var carRequest = new CarRequestModel
+            {
+                CarId = createCarRequestDto.CarId,
+                RequesterName = createCarRequestDto.RequesterName,
+                RequesterEmail = createCarRequestDto.RequesterEmail,
+                DateRequested = createCarRequestDto.DateRequested
+            };
+
+            _carRequestService.AddCarRequest(carRequest);
+            return Ok("Car request added successfully.");
         }
+
+
     }
 }
