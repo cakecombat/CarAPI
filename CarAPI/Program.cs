@@ -26,6 +26,10 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ICarRequestRepository, CarRequestRepository>();
 builder.Services.AddScoped<ICarRequestService, CarRequestService>();
 
+// Register ContactUs service and repository
+builder.Services.AddScoped<IContactUsService, ContactUsService>();
+builder.Services.AddScoped<IContactUsRepository, ContactUsRepository>();
+
 // Configure SendGrid client
 builder.Services.AddSingleton<ISendGridClient>(x =>
     new SendGridClient(builder.Configuration["SendGrid:ApiKey"]));
