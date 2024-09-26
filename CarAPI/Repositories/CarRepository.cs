@@ -12,11 +12,11 @@ public class CarRepository : ICarRepository
         _context = context;
     }
 
-    public IEnumerable<Car> GetAll() => _context.Cars.ToList();
+    public IEnumerable<CarModel> GetAll() => _context.Cars.ToList();
 
-    public Car? GetById(int id) => _context.Cars.FirstOrDefault(c => c.Id == id);
+    public CarModel? GetById(int id) => _context.Cars.FirstOrDefault(c => c.Id == id);
 
-    public void Add(Car car)
+    public void Add(CarModel car)
     {
         car.CreatedAt = DateTime.Now; 
         car.UpdatedAt = DateTime.Now;  
@@ -24,7 +24,7 @@ public class CarRepository : ICarRepository
         _context.SaveChanges(); 
     }
 
-    public void Update(int id, Car car)
+    public void Update(int id, CarModel car)
     {
         var existingCar = GetById(id);
         if (existingCar != null)

@@ -35,7 +35,7 @@ namespace CarAPI.Controllers
         [HttpPost]
         public IActionResult SubmitInquiry([FromBody] InquiryCreateUpdateDto inquiryDto)
         {
-            var inquiry = new Inquiry
+            var inquiry = new InquiryModel
             {
                 CarId = inquiryDto.CarId,
                 UserName = inquiryDto.UserName,

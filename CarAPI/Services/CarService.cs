@@ -12,13 +12,13 @@ namespace CarAPI.Services
             _carRepository = carRepository;
         }
 
-        public IEnumerable<Car> GetAllCars() => _carRepository.GetAll();
+        public IEnumerable<CarModel> GetAllCars() => _carRepository.GetAll();
 
-        public Car GetCarById(int id) => _carRepository.GetById(id);
+        public CarModel GetCarById(int id) => _carRepository.GetById(id);
 
-        public void AddCar(Car car) => _carRepository.Add(car);
+        public void AddCar(CarModel car) => _carRepository.Add(car);
 
-        public void UpdateCar(int id, Car car) => _carRepository.Update(id, car);
+        public void UpdateCar(int id, CarModel car) => _carRepository.Update(id, car);
 
         public void DeleteCar(int id) => _carRepository.Delete(id); 
     }

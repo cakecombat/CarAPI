@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace CarAPI.Models
 {
-    public class Car
+    public class CarModel
     {
         public int Id { get; set; }
 

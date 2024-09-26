@@ -2,9 +2,9 @@
 
 public interface ICarService
 {
-    IEnumerable<Car> GetAllCars();
-    Car GetCarById(int id);
-    void AddCar(Car car);
-    void UpdateCar(int id, Car car);
+    IEnumerable<CarModel> GetAllCars();
+    CarModel GetCarById(int id);
+    void AddCar(CarModel car);
+    void UpdateCar(int id, CarModel car);
     void DeleteCar(int id);
 }

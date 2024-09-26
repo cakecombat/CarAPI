@@ -4,10 +4,10 @@ namespace CarAPI.Repositories
 {
     public interface ICarRepository
     {
-        IEnumerable<Car> GetAll();
-        Car GetById(int id);
-        void Add(Car car);
-        void Update(int id, Car car); 
+        IEnumerable<CarModel> GetAll();
+        CarModel GetById(int id);
+        void Add(CarModel car);
+        void Update(int id, CarModel car); 
         void Delete(int id); 
     }
 

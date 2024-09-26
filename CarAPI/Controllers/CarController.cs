@@ -1,6 +1,7 @@
 ﻿using CarAPI.DTOs;
 using CarAPI.Models;
 using CarAPI.Services;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarAPI.Controllers
@@ -10,10 +11,16 @@ namespace CarAPI.Controllers
     public class CarController : ControllerBase
     {
         private readonly ICarService _carService;
-
+        private readonly ICarRequestService _carRequestService;
         private const string AdminUsername = "admin";
         private const string AdminPassword = "password123";
 
+
+        public CarController(ICarService carService, ICarRequestService carRequestService)
+        {
+            _carService = carService;
+            _carRequestService = carRequestService;
+        }
         /// <summary>
         /// Admin login with username and password.
         /// </summary>
@@ -27,11 +34,6 @@ namespace CarAPI.Controllers
             }
 
             return Unauthorized(new { Message = "Invalid credentials" });
-        }
-
-        public CarController(ICarService carService)
-        {
-            _carService = carService;
         }
 
         /// <summary>
@@ -67,7 +69,7 @@ namespace CarAPI.Controllers
         [Consumes("multipart/form-data")] // Specify that this endpoint accepts multipart/form-data
         public IActionResult AddCar([FromForm] CarCreateUpdateDto carDto)
         {
-            var car = new Car
+            var car = new CarModel
             {
                 Make = carDto.Make,
                 Model = carDto.Model,
@@ -104,6 +106,26 @@ namespace CarAPI.Controllers
 
             _carService.DeleteCar(id);
             return NoContent();
+        }
+
+        /// <summary>
+        /// Retrieves all car requests along with the requester details and date.
+        /// </summary>
+        [HttpGet("car-requests")]
+        public IActionResult GetAllCarRequests()
+        {
+            var requests = _carRequestService.GetAllCarRequests();
+            return Ok(requests);
+        }
+
+        /// <summary>
+        /// Adds a new car request and sends an email to the requester.
+        /// </summary>
+        [HttpPost("car-requests")]
+        public async Task<IActionResult> AddCarRequest([FromBody] CarRequestModel request)
+        {
+            await _carRequestService.AddCarRequest(request);
+            return Ok(new { message = "Car request added and email sent." });
         }
     }
 }

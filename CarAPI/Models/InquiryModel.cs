@@ -2,7 +2,7 @@
 
 namespace CarAPI.Models
 {
-    public class Inquiry
+    public class InquiryModel
     {
 
         public int Id { get; set; }

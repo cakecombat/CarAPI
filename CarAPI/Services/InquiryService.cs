@@ -12,17 +12,17 @@ namespace CarAPI.Services
             _inquiryRepository = inquiryRepository;
         }
 
-        public IEnumerable<Inquiry> GetAllInquiries()
+        public IEnumerable<InquiryModel> GetAllInquiries()
         {
             return _inquiryRepository.GetAll();
         }
 
-        public Inquiry GetInquiryById(int id)
+        public InquiryModel GetInquiryById(int id)
         {
             return _inquiryRepository.GetById(id);
         }
 
-        public void SubmitInquiry(Inquiry inquiry)
+        public void SubmitInquiry(InquiryModel inquiry)
         {
             _inquiryRepository.Add(inquiry);
         }

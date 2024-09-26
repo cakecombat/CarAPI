@@ -1,6 +1,8 @@
 using CarAPI.Repositories;
 using CarAPI.Services;
 using Microsoft.EntityFrameworkCore;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,9 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
         sqlOptions => sqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 5, // Number of retry attempts
-            maxRetryDelay: TimeSpan.FromSeconds(10), // Delay between retries
-            errorNumbersToAdd: null // Optionally, add specific SQL error numbers for retry
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null
         )
     ));
 
@@ -20,6 +22,13 @@ builder.Services.AddScoped<ICarRepository, CarRepository>();
 builder.Services.AddScoped<IInquiryRepository, InquiryRepository>();
 builder.Services.AddScoped<ICarService, CarService>();
 builder.Services.AddScoped<IInquiryService, InquiryService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ICarRequestRepository, CarRequestRepository>();
+builder.Services.AddScoped<ICarRequestService, CarRequestService>();
+
+// Configure SendGrid client
+builder.Services.AddSingleton<ISendGridClient>(x =>
+    new SendGridClient(builder.Configuration["SendGrid:ApiKey"]));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

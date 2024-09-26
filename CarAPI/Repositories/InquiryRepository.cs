@@ -11,11 +11,11 @@ namespace CarAPI.Repositories
             _context = context;
         }
 
-        public IEnumerable<Inquiry> GetAll() => _context.Inquiries.ToList();
+        public IEnumerable<InquiryModel> GetAll() => _context.Inquiries.ToList();
 
-        public Inquiry GetById(int id) => _context.Inquiries.FirstOrDefault(i => i.Id == id);
+        public InquiryModel GetById(int id) => _context.Inquiries.FirstOrDefault(i => i.Id == id);
 
-        public void Add(Inquiry inquiry)
+        public void Add(InquiryModel inquiry)
         {
             inquiry.CreatedAt = DateTime.Now;  // Set creation time
             inquiry.UpdatedAt = DateTime.Now;  // Set update time (same on creation)

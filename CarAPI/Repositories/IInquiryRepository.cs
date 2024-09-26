@@ -4,9 +4,9 @@ namespace CarAPI.Repositories
 {
     public interface IInquiryRepository
     {
-        IEnumerable<Inquiry> GetAll();
-        Inquiry GetById(int id);
-        void Add(Inquiry inquiry);
+        IEnumerable<InquiryModel> GetAll();
+        InquiryModel GetById(int id);
+        void Add(InquiryModel inquiry);
         void UpdateStatus(int id, string status);
     }
 
