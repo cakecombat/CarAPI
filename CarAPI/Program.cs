@@ -2,7 +2,6 @@ using CarAPI.Repositories;
 using CarAPI.Services;
 using Microsoft.EntityFrameworkCore;
 using SendGrid;
-using SendGrid.Helpers.Mail;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +15,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
             errorNumbersToAdd: null
         )
     ));
+
+// Register HttpClient
+builder.Services.AddHttpClient();
 
 // Registering services and repositories with scoped lifetimes
 builder.Services.AddScoped<ICarRepository, CarRepository>();

@@ -4,6 +4,6 @@ namespace CarAPI.Services
 {
     public interface IEmailService
     {
-        Task SendEmailAsync(string toEmail, string subject, string message);
+        Task<bool> SendEmailAsync(string toEmail, string subject, string message);
     }
 }

@@ -2,21 +2,29 @@
 using CarAPI.Models;
 using CarAPI.Repositories;
 using CarAPI.Services;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 public class CarRequestService : ICarRequestService
 {
     private readonly ICarRequestRepository _carRequestRepository;
     private readonly ICarRepository _carRepository;
     private readonly IEmailService _emailService;
+    private readonly ILogger<CarRequestService> _logger;
 
     public CarRequestService(
         ICarRequestRepository carRequestRepository,
         ICarRepository carRepository,
-        IEmailService emailService)
+        IEmailService emailService,
+        ILogger<CarRequestService> logger)
     {
         _carRequestRepository = carRequestRepository;
         _carRepository = carRepository;
         _emailService = emailService;
+        _logger = logger;
     }
 
     public IEnumerable<CarRequestDetailDto> GetAllCarRequests()
@@ -38,37 +46,52 @@ public class CarRequestService : ICarRequestService
         }).ToList();
     }
 
-    public async Task AddCarRequest(CreateCarRequestDto requestDto)
+    public async Task<bool> AddCarRequest(CreateCarRequestDto requestDto)
     {
-        var car = _carRepository.GetCarById(requestDto.CarId);
-        if (car == null)
+        try
         {
-            throw new ArgumentException("Invalid CarId provided");
-        }
+            var car = _carRepository.GetCarById(requestDto.CarId);
+            if (car == null)
+            {
+                _logger.LogWarning($"Attempt to create request for non-existent car with ID {requestDto.CarId}");
+                throw new ArgumentException("Invalid CarId provided");
+            }
 
-        var carRequest = new CarRequestModel
-        {
-            CarId = requestDto.CarId,
-            RequesterName = requestDto.RequesterName,
-            RequesterEmail = requestDto.RequesterEmail,
-            DateRequested = DateTime.UtcNow
-        };
+            var carRequest = new CarRequestModel
+            {
+                CarId = requestDto.CarId,
+                RequesterName = requestDto.RequesterName,
+                RequesterEmail = requestDto.RequesterEmail,
+                DateRequested = DateTime.UtcNow
+            };
 
-        _carRequestRepository.AddRequest(carRequest);
+            _carRequestRepository.AddRequest(carRequest);
 
-        var subject = "Car Request Confirmation";
-        var message = $@"Hi {carRequest.RequesterName},
-
+            var subject = "Car Request Confirmation";
+            var message = $@"Hi {carRequest.RequesterName},
 Your request for the following car has been received:
-
 Make: {car.Make}
 Model: {car.Model}
 Price: ${car.Price:N2}
-
 We will get back to you soon.
-
 Thanks!";
 
-        await _emailService.SendEmailAsync(carRequest.RequesterEmail, subject, message);
+            var emailSent = await _emailService.SendEmailAsync(carRequest.RequesterEmail, subject, message);
+            if (emailSent)
+            {
+                _logger.LogInformation($"Email sent successfully to {carRequest.RequesterEmail}");
+            }
+            else
+            {
+                _logger.LogWarning($"Failed to send email to {carRequest.RequesterEmail}");
+            }
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while processing car request");
+            return false;
+        }
     }
 }
