@@ -72,7 +72,7 @@ public class CarRequestService : ICarRequestService
 Your request for the following car has been received:
 Make: {car.Make}
 Model: {car.Model}
-Price: ${car.Price:N2}
+Price: ₦{car.Price:N2}
 We will get back to you soon.
 Thanks!";
 
